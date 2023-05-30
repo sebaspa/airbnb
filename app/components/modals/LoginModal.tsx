@@ -1,18 +1,18 @@
 "use client";
 
-import {signIn} from 'next-auth/react'
-import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
-import useLoginModal from '@/app/hooks/useLoginModal';
+import useLoginModal from "@/app/hooks/useLoginModal";
 import { Modal } from "./Modal";
 import { Heading } from "../Heading";
 import { Input } from "../inputs/Input";
 import { Button } from "../Button";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export const LoginModal = () => {
   const router = useRouter();
@@ -34,22 +34,26 @@ export const LoginModal = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
-    signIn('credentials', {
+    signIn("credentials", {
       ...data,
       redirect: false,
-    })
-    .then((callback) => {
+    }).then((callback) => {
       setIsLoading(false);
-      if(callback?.ok) {
+      if (callback?.ok) {
         toast.success("Successfully logged in");
         router.refresh();
         loginModal.onClose();
       }
-      if(callback?.error) {
+      if (callback?.error) {
         toast.error(callback.error);
       }
-    })
+    });
   };
+
+  const toggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
@@ -62,12 +66,12 @@ export const LoginModal = () => {
       />
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex justify-center items-center gap-2">
-          <div>Already have an account?</div>
+          <div>First time using Airbnb?</div>
           <div
-           onClick={registerModal.onClose}
+            onClick={toggle}
             className="text-neutral-800 cursor-pointer hover:underline"
           >
-            Login
+            Create an account
           </div>
         </div>
       </div>
