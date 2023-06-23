@@ -2,6 +2,7 @@
 
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { SafeUser } from "../types";
+import useFavorite from "../hooks/useFavorite";
 
 interface HearthButtonProps {
   listingId: string;
@@ -12,11 +13,13 @@ export const HearthButton: React.FC<HearthButtonProps> = ({
   listingId,
   currentUser,
 }) => {
-  const hasFavorited = false;
-  const toggleFavorited = () => {};
+  const { hasFavorited, toggleFavorite } = useFavorite({
+    listingId,
+    currentUser,
+  });
   return (
     <div
-      onClick={toggleFavorited}
+      onClick={toggleFavorite}
       className="
         relative
         hover:opacity-80
